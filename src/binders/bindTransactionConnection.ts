@@ -9,7 +9,7 @@ import { nestedTransaction } from '../connectionMethods/nestedTransaction';
 import { one } from '../connectionMethods/one';
 import { oneFirst } from '../connectionMethods/oneFirst';
 import { query as queryMethod } from '../connectionMethods/query';
-import { stream } from '../connectionMethods/stream';
+import { stream, rawStream } from '../connectionMethods/stream';
 import { getPoolClientState } from '../state';
 import {
   type ClientConfiguration,
@@ -102,6 +102,16 @@ export const bindTransactionConnection = (
         clientConfiguration,
         slonikSql,
         streamHandler,
+      );
+    },
+    rawStream: async (slonikSql) => {
+      assertTransactionDepth();
+
+      return await rawStream(
+        parentLog,
+        connection,
+        clientConfiguration,
+        slonikSql,
       );
     },
     transaction: async (handler, transactionRetryLimit) => {

@@ -139,6 +139,11 @@ export type StreamFunction = (
   config?: QueryStreamConfig,
 ) => Promise<Record<string, unknown> | null>;
 
+export type RawStreamFunction = (
+  sql: QuerySqlToken,
+  config?: QueryStreamConfig,
+) => Readable;
+
 export type CommonQueryMethods = {
   readonly any: QueryAnyFunction;
   readonly anyFirst: QueryAnyFirstFunction;
@@ -158,6 +163,7 @@ export type CommonQueryMethods = {
 
 export type DatabaseTransactionConnection = CommonQueryMethods & {
   readonly stream: StreamFunction;
+  readonly rawStream: RawStreamFunction;
 };
 
 export type TransactionFunction<T> = (
@@ -166,6 +172,7 @@ export type TransactionFunction<T> = (
 
 export type DatabasePoolConnection = CommonQueryMethods & {
   readonly stream: StreamFunction;
+  readonly rawStream: RawStreamFunction;
 };
 
 export type ConnectionRoutine<T> = (
@@ -185,6 +192,7 @@ export type DatabasePool = CommonQueryMethods & {
   readonly end: () => Promise<void>;
   readonly getPoolState: () => PoolState;
   readonly stream: StreamFunction;
+  readonly rawStream: RawStreamFunction;
 };
 
 export type DatabaseConnection = DatabasePool | DatabasePoolConnection;
@@ -438,6 +446,15 @@ export type InternalStreamFunction = (
   uid?: QueryId,
   config?: QueryStreamConfig,
 ) => Promise<Record<string, unknown>>;
+
+export type InternalRawStreamFunction = (
+  log: Logger,
+  connection: PgPoolClient,
+  clientConfiguration: ClientConfiguration,
+  slonikSql: QuerySqlToken,
+  uid?: QueryId,
+  config?: QueryStreamConfig,
+) => Readable;
 
 export type InternalTransactionFunction = <T>(
   log: Logger,
