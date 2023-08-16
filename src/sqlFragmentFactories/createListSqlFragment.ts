@@ -18,10 +18,6 @@ export const createListSqlFragment = (
 
   let placeholderIndex = greatestParameterPosition;
 
-  if (token.members.length === 0) {
-    throw new InvalidInputError('Value list must have at least 1 member.');
-  }
-
   for (const member of token.members) {
     if (isSqlToken(member)) {
       const sqlFragment = createSqlTokenSqlFragment(member, placeholderIndex);
